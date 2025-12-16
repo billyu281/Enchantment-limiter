@@ -3,53 +3,31 @@ options:
     protmsg: &cProtection IV is disabled!
     sharpmsg: &cSharpness V is disabled!
     powermsg: &cPower V is disabled!
-    removedmsg: &eIllegal enchantments were removed.
 
 # --------------------
 # ENCHANTING TABLE
 # --------------------
 on enchant:
-    if enchantment level of protection on event-item > 3:
+    if protection 4 is in enchantments of event-item:
         cancel event
         send "{@prefix}{@protmsg}" to player
-    if enchantment level of sharpness on event-item > 4:
+    if sharpness 5 is in enchantments of event-item:
         cancel event
         send "{@prefix}{@sharpmsg}" to player
-    if enchantment level of power on event-item > 4:
+    if power 5 is in enchantments of event-item:
         cancel event
         send "{@prefix}{@powermsg}" to player
 
 # --------------------
-# ANVIL
+# ANVIL (SAFE METHOD)
 # --------------------
-on inventory click:
-    if inventory type is anvil:
-        if clicked item is air:
-            stop
-        if enchantment level of protection on clicked item > 3:
-            cancel event
-            send "{@prefix}{@protmsg}" to player
-        if enchantment level of sharpness on clicked item > 4:
-            cancel event
-            send "{@prefix}{@sharpmsg}" to player
-        if enchantment level of power on clicked item > 4:
-            cancel event
-            send "{@prefix}{@powermsg}" to player
+on prepare anvil:
+    if result is not set:
+        stop
 
-# --------------------
-# CLEAN ILLEGAL ITEMS
-# --------------------
-on inventory open:
-    set {_removed} to false
-    loop all items in player's inventory:
-        if enchantment level of protection on loop-item > 3:
-            remove protection from loop-item
-            set {_removed} to true
-        if enchantment level of sharpness on loop-item > 4:
-            remove sharpness from loop-item
-            set {_removed} to true
-        if enchantment level of power on loop-item > 4:
-            remove power from loop-item
-            set {_removed} to true
-    if {_removed} is true:
-        send "{@prefix}{@removedmsg}" to player
+    if protection 4 is in enchantments of result:
+        set result to air
+    if sharpness 5 is in enchantments of result:
+        set result to air
+    if power 5 is in enchantments of result:
+        set result to air
