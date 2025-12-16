@@ -1,60 +1,51 @@
-/plugins/Skript/scripts/
-
-# ===============================
-# Ban Prot 4 / Sharp 5 / Power 5
-# With Custom Messages
-# Aternos Compatible
-# ===============================
-
 options:
-        prefix: &8[&cEnchant Ban&8] &r
-        prot-message: &cProtection IV is disabled on this server!
-        sharp-message: &cSharpness V is disabled on this server!
-        power-message: &cPower V is disabled on this server!
-        removed-message: &eIllegal enchantments were removed from your items.
+    prefix: &8[&cEnchant Ban&8] &r
+    protmsg: &cProtection IV is disabled!
+    sharpmsg: &cSharpness V is disabled!
+    powermsg: &cPower V is disabled!
+    removedmsg: &eIllegal enchantments were removed.
 
-# --- ENCHANTING TABLE ---
+# Block enchanting
 on enchant:
-        loop enchantments of event-item:
-                if loop-enchantment is protection and level of loop-enchantment > 3:
-                        cancel event
-                        send "{@prefix}{@prot-message}" to player
-                if loop-enchantment is sharpness and level of loop-enchantment > 4:
-                        cancel event
-                        send "{@prefix}{@sharp-message}" to player
-                if loop-enchantment is power and level of loop-enchantment > 4:
-                        cancel event
-                        send "{@prefix}{@power-message}" to player
+    loop enchantments of event-item:
+        if loop-enchantment is protection and level of loop-enchantment > 3:
+            cancel event
+            send "{@prefix}{@protmsg}" to player
+        if loop-enchantment is sharpness and level of loop-enchantment > 4:
+            cancel event
+            send "{@prefix}{@sharpmsg}" to player
+        if loop-enchantment is power and level of loop-enchantment > 4:
+            cancel event
+            send "{@prefix}{@powermsg}" to player
 
-# --- ANVIL COMBINING ---
+# Block anvil combining
 on inventory click:
-        if inventory type is anvil:
-                if clicked item is not air:
-                        loop enchantments of clicked item:
-                                if loop-enchantment is protection and level of loop-enchantment > 3:
-                                        cancel event
-                                        send "{@prefix}{@prot-message}" to player
-                                if loop-enchantment is sharpness and level of loop-enchantment > 4:
-                                        cancel event
-                                        send "{@prefix}{@sharp-message}" to player
-                                if loop-enchantment is power and level of loop-enchantment > 4:
-                                        cancel event
-                                        send "{@prefix}{@power-message}" to player
+    if inventory type is anvil:
+        if clicked item is not air:
+            loop enchantments of clicked item:
+                if loop-enchantment is protection and level of loop-enchantment > 3:
+                    cancel event
+                    send "{@prefix}{@protmsg}" to player
+                if loop-enchantment is sharpness and level of loop-enchantment > 4:
+                    cancel event
+                    send "{@prefix}{@sharpmsg}" to player
+                if loop-enchantment is power and level of loop-enchantment > 4:
+                    cancel event
+                    send "{@prefix}{@powermsg}" to player
 
-# --- CLEAN EXISTING ILLEGAL ITEMS ---
+# Clean illegal items
 on inventory open:
-        set {_removed} to false
-        loop all items in player's inventory:
-                loop enchantments of loop-item:
-                        if loop-enchantment is protection and level of loop-enchantment > 3:
-                                remove loop-enchantment from loop-item
-                                set {_removed} to true
-                        if loop-enchantment is sharpness and level of loop-enchantment > 4:
-                                remove loop-enchantment from loop-item
-                                set {_removed} to true
-                        if loop-enchantment is power and level of loop-enchantment > 4:
-                                remove loop-enchantment from loop-item
-                                set {_removed} to true
-        if {_removed} is true:
-                send "{@prefix}{@removed-message}" to player
-
+    set {_removed} to false
+    loop all items in player's inventory:
+        loop enchantments of loop-item:
+            if loop-enchantment is protection and level of loop-enchantment > 3:
+                remove loop-enchantment from loop-item
+                set {_removed} to true
+            if loop-enchantment is sharpness and level of loop-enchantment > 4:
+                remove loop-enchantment from loop-item
+                set {_removed} to true
+            if loop-enchantment is power and level of loop-enchantment > 4:
+                remove loop-enchantment from loop-item
+                set {_removed} to true
+    if {_removed} is true:
+        send "{@prefix}{@removedmsg}" to player
