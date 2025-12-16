@@ -5,47 +5,51 @@ options:
     powermsg: &cPower V is disabled!
     removedmsg: &eIllegal enchantments were removed.
 
-# Block enchanting
+# --------------------
+# ENCHANTING TABLE
+# --------------------
 on enchant:
-    loop enchantments of event-item:
-        if loop-enchantment is protection and level of loop-enchantment > 3:
+    if enchantment level of protection on event-item > 3:
+        cancel event
+        send "{@prefix}{@protmsg}" to player
+    if enchantment level of sharpness on event-item > 4:
+        cancel event
+        send "{@prefix}{@sharpmsg}" to player
+    if enchantment level of power on event-item > 4:
+        cancel event
+        send "{@prefix}{@powermsg}" to player
+
+# --------------------
+# ANVIL
+# --------------------
+on inventory click:
+    if inventory type is anvil:
+        if clicked item is air:
+            stop
+        if enchantment level of protection on clicked item > 3:
             cancel event
             send "{@prefix}{@protmsg}" to player
-        if loop-enchantment is sharpness and level of loop-enchantment > 4:
+        if enchantment level of sharpness on clicked item > 4:
             cancel event
             send "{@prefix}{@sharpmsg}" to player
-        if loop-enchantment is power and level of loop-enchantment > 4:
+        if enchantment level of power on clicked item > 4:
             cancel event
             send "{@prefix}{@powermsg}" to player
 
-# Block anvil combining
-on inventory click:
-    if inventory type is anvil:
-        if clicked item is not air:
-            loop enchantments of clicked item:
-                if loop-enchantment is protection and level of loop-enchantment > 3:
-                    cancel event
-                    send "{@prefix}{@protmsg}" to player
-                if loop-enchantment is sharpness and level of loop-enchantment > 4:
-                    cancel event
-                    send "{@prefix}{@sharpmsg}" to player
-                if loop-enchantment is power and level of loop-enchantment > 4:
-                    cancel event
-                    send "{@prefix}{@powermsg}" to player
-
-# Clean illegal items
+# --------------------
+# CLEAN ILLEGAL ITEMS
+# --------------------
 on inventory open:
     set {_removed} to false
     loop all items in player's inventory:
-        loop enchantments of loop-item:
-            if loop-enchantment is protection and level of loop-enchantment > 3:
-                remove loop-enchantment from loop-item
-                set {_removed} to true
-            if loop-enchantment is sharpness and level of loop-enchantment > 4:
-                remove loop-enchantment from loop-item
-                set {_removed} to true
-            if loop-enchantment is power and level of loop-enchantment > 4:
-                remove loop-enchantment from loop-item
-                set {_removed} to true
+        if enchantment level of protection on loop-item > 3:
+            remove protection from loop-item
+            set {_removed} to true
+        if enchantment level of sharpness on loop-item > 4:
+            remove sharpness from loop-item
+            set {_removed} to true
+        if enchantment level of power on loop-item > 4:
+            remove power from loop-item
+            set {_removed} to true
     if {_removed} is true:
         send "{@prefix}{@removedmsg}" to player
